@@ -13,10 +13,14 @@
 </head>
 <body>
 
-    <div class="container mt-5">
+    {% include "includes/navbar.html" %}
+
+    <main class="container mt-4">
         {% block content %}
         {% endblock %}
-    </div>
+    </main>
+
+    {% include "includes/footer.html" %}
 
 </body>
 </html>
