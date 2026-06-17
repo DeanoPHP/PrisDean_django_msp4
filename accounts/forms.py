@@ -1,5 +1,7 @@
 from django import forms
 from allauth.account.forms import SignupForm
+from django.forms import ModelForm
+from .models import Profile
 
 
 class CustomSignupForm(SignupForm):
@@ -22,3 +24,14 @@ class CustomSignupForm(SignupForm):
         user.profile.save()
 
         return user
+    
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            "telephone",
+            "address",
+            "postcode",
+            "profile_image",
+        ]

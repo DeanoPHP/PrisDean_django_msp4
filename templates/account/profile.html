@@ -3,10 +3,16 @@
 {% block content %}
 
 <div class="container py-5">
-
     <div class="card shadow">
-
         <div class="card-body">
+
+            {% if user.profile.profile_image %}
+                <img
+                    src="{{ user.profile.profile_image.url }}"
+                    alt="Profile Image"
+                    class="img-thumbnail mb-3"
+                    width="200">
+            {% endif %}
 
             <h2 class="mb-4">
                 My Profile
@@ -42,10 +48,13 @@
                 {{ user.profile.postcode }}
             </p>
 
+            <a
+                href="{% url 'edit_profile' %}" class="btn btn-primary">
+                Edit Profile
+            </a>
+
         </div>
-
     </div>
-
 </div>
 
 {% endblock %}
