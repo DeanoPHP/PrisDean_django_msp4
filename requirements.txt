@@ -6,3 +6,4 @@ stripe
 Pillow
 black
 flake8
+django-allauth
