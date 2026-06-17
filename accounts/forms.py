@@ -24,7 +24,7 @@ class CustomSignupForm(SignupForm):
         user.profile.save()
 
         return user
-    
+
 
 class ProfileForm(ModelForm):
     class Meta:

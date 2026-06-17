@@ -123,3 +123,63 @@ body {
     margin-bottom: 1rem;
     font-weight: 700;
 }
+
+/* Review section */
+.reviews-section {
+    background-color: #f8f9fa;
+}
+
+.review-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    height: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.review-card p {
+    color: #555;
+    font-style: italic;
+}
+
+.review-card h5 {
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.review-card span {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* call to action section */
+.cta-section {
+    background-color: #212529;
+    color: white;
+}
+
+.cta-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.cta-section .btn {
+    min-width: 180px;
+}
+
+/* Media query for mobile phones */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 94vh;
+    }
+
+    .hero-content {
+        margin-left: 50px;
+    }
+}
