@@ -99,6 +99,61 @@ The project is built using modern web development technologies and follows best 
 
 ---
 
+## Running the Project Locally
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/prisdean.git
+cd prisdean
+```
+
+### Create Environment Variables
+
+Create a `.env` file in the project root and add the required environment variables.
+
+### Build the Docker Containers
+
+```bash
+docker compose build
+```
+
+### Start the Application
+
+```bash
+docker compose up
+```
+
+### Apply Migrations
+
+Open a new terminal and run:
+
+```bash
+docker compose exec web python manage.py migrate
+```
+
+### Create a Superuser
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+### Access the Website
+
+Open your browser and navigate to:
+
+```
+http://127.0.0.1:8000
+```
+
+### Access Django Admin
+
+```
+http://127.0.0.1:8000/admin
+```
+
+---
+
 ## Testing
 
 Testing documentation will be added during development and prior to project submission.
