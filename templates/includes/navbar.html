@@ -29,12 +29,21 @@
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            Dropdown link
+            {% if user.is_authenticated %}
+                Hello, {{ user.first_name|default:user.username }}
+            {% else %}
+                My Account
+            {% endif %}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Login</a></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
-            <li><a class="dropdown-item" href="#">Register</a></li>
+            {% if user.is_authenticated %}
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>      
+            {% else %}
+              <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
+              <li><a class="dropdown-item" href="{% url 'account_signup' %}">Register</a></li>
+            {% endif %}
           </ul>
         </li>
       </ul>
