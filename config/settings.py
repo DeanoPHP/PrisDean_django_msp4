@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     # Local apps
     "home",
-    "accounts",
+    "accounts.apps.AccountsConfig",
 ]
 
 SITE_ID = 1
