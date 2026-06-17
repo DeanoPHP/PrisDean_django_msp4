@@ -4,3 +4,5 @@ python-dotenv
 django-allauth
 stripe
 Pillow
+black
+flake8
