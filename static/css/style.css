@@ -1,3 +1,49 @@
+* {
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #f8f9fa;
 }
+
+/* Hero section for the home page */
+.hero {
+    min-height: 80vh;
+    width: 100%;
+    background:
+        linear-gradient(
+            rgba(0,0,0,.6),
+            rgba(0,0,0,.6)
+        ),
+        url("../images/hero.png");
+
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.hero-content {
+    width: 60%;
+    height: 400px;
+    margin-left: 100px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+.hero-content {
+    padding-top: 2rem;
+}
+
+.hero h1,
+.hero p {
+    text-shadow: 2px 2px 8px rgba(0,0,0,.8);
+}
+
+/* End of hero section */
