@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <h2 class="mb-4">
+                My Profile
+            </h2>
+
+            <p>
+                <strong>First Name:</strong>
+                {{ user.first_name }}
+            </p>
+
+            <p>
+                <strong>Last Name:</strong>
+                {{ user.last_name }}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                {{ user.email }}
+            </p>
+
+            <p>
+                <strong>Telephone:</strong>
+                {{ user.profile.telephone }}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                {{ user.profile.address }}
+            </p>
+
+            <p>
+                <strong>Postcode:</strong>
+                {{ user.profile.postcode }}
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
