@@ -99,6 +99,74 @@ The project is built using modern web development technologies and follows best 
 
 ---
 
+## User Profile Automation
+
+To improve the user experience, a profile is automatically created whenever a new user registers.
+
+### Technologies Used
+
+- Django Signals
+- Django Allauth
+- One-to-One Relationships
+
+### How It Works
+
+When a user successfully registers through Django Allauth, a Django signal listens for the creation of a new User object.
+
+The signal automatically creates a corresponding Profile object linked to the user through a One-to-One relationship.
+
+This ensures that every registered user has a profile without requiring additional setup steps.
+
+### Example Signal
+
+```python
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import Profile
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+```
+
+---
+
+## Project Architecture
+
+### Authentication
+
+- Django Allauth handles user registration and login.
+- Authentication templates are customised to match the site design.
+
+### Profile Management
+
+- A Profile model extends Django's built-in User model.
+- Profiles are automatically created using Django Signals.
+
+### Database
+
+- PostgreSQL is used as the primary database.
+- Relationships are managed using Django ORM.
+
+### Containerisation
+
+- Docker is used to ensure a consistent development environment.
+- PostgreSQL and Django run in separate containers managed by Docker Compose.
+```
+
+### Benefits
+
+- Profiles are created automatically
+- Prevents missing profile records
+- Simplifies user onboarding
+- Demonstrates Django signal implementation
+```
+
+
+---
+
 ## Running the Project Locally
 
 ### Clone the Repository
@@ -153,6 +221,44 @@ http://127.0.0.1:8000/admin
 ```
 
 ---
+
+## Why Docker?
+
+Although Docker was not a requirement for this project, it was chosen to provide a consistent and reproducible development environment.
+
+### Benefits
+
+- Ensures the project runs the same way on any machine.
+- Simplifies project setup for assessors and developers.
+- Isolates project dependencies from the host operating system.
+- Allows Django and PostgreSQL to run in separate containers.
+- Reflects modern industry development practices.
+
+### What Docker Manages
+
+The project uses Docker Compose to manage:
+
+- Django application container
+- PostgreSQL database container
+
+This allows the application to be started with a single command:
+
+```bash
+docker compose up
+```
+
+### Learning Outcomes
+
+Implementing Docker helped develop an understanding of:
+
+- Containerisation
+- Multi-container applications
+- Environment management
+- Database services
+- Deployment preparation
+
+---
+
 
 ## Testing
 
