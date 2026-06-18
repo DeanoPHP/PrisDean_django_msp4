@@ -163,6 +163,11 @@ def create_profile(sender, instance, created, **kwargs):
 - Simplifies user onboarding
 - Demonstrates Django signal implementation
 ```
+---
+
+## Wireframes
+
+
 
 
 ---
