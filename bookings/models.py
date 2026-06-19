@@ -3,11 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Booking(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="bookings"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookings")
 
     booking_date = models.DateField()
     booking_time = models.TimeField()
