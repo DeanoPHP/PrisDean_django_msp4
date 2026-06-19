@@ -48,6 +48,7 @@
             {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url "profile" %}">Profile</a></li>
               <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'create_booking' %}">Book Now</a></li>      
               <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>      
             {% else %}
               <li><a class="dropdown-item" href="{% url 'account_login' %}">Login</a></li>
