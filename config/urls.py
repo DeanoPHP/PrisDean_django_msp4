@@ -8,7 +8,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("", include("accounts.urls")),
     path("", include("home.urls")),
-    path("bookings/", include("bookings.urls"))
+    path("bookings/", include("bookings.urls")),
 ]
 
 if settings.DEBUG:

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import BookingForm
+from .models import Booking
 
 
 @login_required
@@ -26,3 +27,21 @@ def create_booking(request):
         "bookings/create_booking.html",
         {"form": form},
     )
+
+
+@login_required
+def my_bookings(request):
+    bookings = Booking.objects.filter(
+        user=request.user
+    ).order_by("booking_date", "booking_time")
+
+    context = {
+        "bookings": bookings,
+    }
+
+    return render(
+        request,
+        "bookings/my_bookings.html",
+        context,
+    )
+
