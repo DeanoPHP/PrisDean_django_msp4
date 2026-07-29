@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -45,3 +45,40 @@ def my_bookings(request):
         context,
     )
 
+
+@login_required
+@login_required
+
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        user=request.user,
+    )
+
+    if request.method == "POST":
+        form = BookingForm(request.POST, instance=booking)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Booking updated successfully.",
+            )
+
+            return redirect("my_bookings")
+
+    else:
+        form = BookingForm(instance=booking)
+
+    context = {
+        "form": form,
+        "booking": booking,
+    }
+
+    return render(
+        request,
+        "bookings/edit_booking.html",
+        context,
+    )
+    

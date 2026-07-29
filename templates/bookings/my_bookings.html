@@ -103,15 +103,15 @@ My Bookings | PrisDean Cleaning
 
                                             {% if booking.status != "cancelled" %}
 
-                                                {% comment %} <a href="{% url 'edit_booking' booking.id %}"
+                                                <a href="{% url 'edit_booking' booking.id %}"
                                                    class="btn btn-outline-primary">
                                                     Edit Booking
                                                 </a>
 
-                                                <a href="{% url 'delete_booking' booking.id %}"
+                                                {% comment %} <a href="{% url 'delete_booking' booking.id %}"
                                                    class="btn btn-outline-danger">
                                                     Cancel Booking
-                                                </a> {% endcomment %}
+                                                </a>  {% endcomment %}
 
                                             {% endif %}
 
