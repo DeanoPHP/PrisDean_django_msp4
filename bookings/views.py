@@ -92,11 +92,12 @@ def delete_booking(request, booking_id):
     )
 
     if request.method == "POST":
-        booking.delete()
+        booking.status = "cancelled"
+        booking.save()
 
         messages.success(
             request,
-            "Your booking has been cancelled successfully."
+            "Your booking has been cancelled."
         )
 
         return redirect("my_bookings")
