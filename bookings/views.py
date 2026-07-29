@@ -82,3 +82,31 @@ def edit_booking(request, booking_id):
         context,
     )
     
+
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(
+        Booking, 
+        id=booking_id,
+        user=request.user,
+    )
+
+    if request.method == "POST":
+        booking.delete()
+
+        messages.success(
+            request,
+            "Your booking has been cancelled successfully."
+        )
+
+        return redirect("my_bookings")
+
+    context = {
+        "booking": booking,
+    }
+
+    return render(
+        request,
+        "bookings/delete_booking.html",
+        context,
+    )
