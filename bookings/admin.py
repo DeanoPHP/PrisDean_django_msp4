@@ -9,9 +9,11 @@ class BookingAdmin(admin.ModelAdmin):
         "user",
         "booking_date",
         "booking_time",
+        "status",
     )
 
     list_filter = (
+        "status",
         "booking_date",
     )
 
