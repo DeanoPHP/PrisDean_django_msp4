@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Booking
+from .models import Booking, AvailableTimeSlots
 
 
 @admin.register(Booking)
@@ -25,4 +25,23 @@ class BookingAdmin(admin.ModelAdmin):
     ordering = (
         "booking_date",
         "booking_time",
+    )
+
+
+@admin.register(AvailableTimeSlots)
+class AvailableTimeSlotAdmin(admin.ModelAdmin):
+    list_display = (
+        "date", 
+        "time", 
+        "is_active"
+    )
+
+    list_filter = (
+        "is_active", 
+        "date"
+    )
+
+    ordering = (
+        "date", 
+        "time"
     )

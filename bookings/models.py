@@ -25,3 +25,21 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.booking_date}"
+
+
+class AvailableTimeSlots(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["date", "time"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["date", "time"],
+                name="unique_available_time_slot",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.date} at {self.time.strftime('%H:%M')}"
