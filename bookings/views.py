@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -5,7 +6,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 
 from .forms import BookingForm
-from .models import Booking, AvailableTimeSlots
+from .models import AvailableTimeSlots, Booking
 
 
 @login_required
@@ -14,13 +15,49 @@ def create_booking(request):
         form = BookingForm(request.POST)
 
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.save()
+            booking_date = form.cleaned_data["booking_date"]
+            booking_time = form.cleaned_data["booking_time"]
 
-            messages.success(request, "Your booking has been created.")
-            return redirect("home")
+            with transaction.atomic():
+                slot = (
+                    AvailableTimeSlots.objects
+                    .select_for_update()
+                    .filter(
+                        date=booking_date,
+                        time=booking_time,
+                        is_active=True,
+                    )
+                    .first()
+                )
 
+                if not slot:
+                    form.add_error(
+                        None,
+                        "This appointment is no longer available. "
+                        "Please choose another slot.",
+                    )
+                else:
+                    already_booked = Booking.objects.filter(
+                        booking_date=booking_date,
+                        booking_time=booking_time,
+                    ).exclude(status="cancelled").exists()
+
+                    if already_booked:
+                        form.add_error(
+                            None,
+                            "This appointment has just been booked. "
+                            "Please choose another slot.",
+                        )
+                    else:
+                        booking = form.save(commit=False)
+                        booking.user = request.user
+                        booking.save()
+
+                        messages.success(
+                            request,
+                            "Your booking has been created.",
+                        )
+                        return redirect("my_bookings")
     else:
         form = BookingForm()
 
@@ -49,8 +86,6 @@ def my_bookings(request):
 
 
 @login_required
-@login_required
-
 def edit_booking(request, booking_id):
     booking = get_object_or_404(
         Booking,
@@ -115,6 +150,7 @@ def delete_booking(request, booking_id):
     )
 
 
+@login_required
 def available_slots(request):
     today = timezone.localdate()
     slots = AvailableTimeSlots.objects.filter(

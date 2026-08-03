@@ -1,5 +1,5 @@
 from django import forms
-from .models import Booking
+from .models import AvailableTimeSlots, Booking
 
 
 class BookingForm(forms.ModelForm):
@@ -12,12 +12,14 @@ class BookingForm(forms.ModelForm):
                 attrs={
                     "type": "date",
                     "class": "form-control",
+                    "readonly": True,
                 }
             ),
             "booking_time": forms.TimeInput(
                 attrs={
                     "type": "time",
                     "class": "form-control",
+                    "readonly": True,
                 }
             ),
         }
@@ -33,13 +35,36 @@ class BookingForm(forms.ModelForm):
         booking_date = cleaned_data.get("booking_date")
         booking_time = cleaned_data.get("booking_time")
 
-        if booking_date and booking_time:
-            booking_exists = Booking.objects.filter(
-                booking_date=booking_date,
-                booking_time=booking_time,
-            ).exists()
+        if not booking_date or not booking_time:
+            return cleaned_data
 
-            if booking_exists:
-                raise forms.ValidationError(
-                    "This date and time already exists. Please choose a different date and time."
-                )
+        slot_exists = AvailableTimeSlots.objects.filter(
+            date=booking_date,
+            time=booking_time,
+            is_active=True,
+        ).exists()
+
+        if not slot_exists:
+            raise forms.ValidationError(
+                "This appointment is not available. "
+                "Please choose a slot from the calendar."
+            )
+
+        existing_bookings = Booking.objects.filter(
+            booking_date=booking_date,
+            booking_time=booking_time,
+        ).exclude(status="cancelled")
+
+        # When editing, exclude the current booking from the check.
+        if self.instance and self.instance.pk:
+            existing_bookings = existing_bookings.exclude(
+                pk=self.instance.pk
+            )
+
+        if existing_bookings.exists():
+            raise forms.ValidationError(
+                "This appointment has already been booked. "
+                "Please choose another available slot."
+            )
+
+        return cleaned_data
