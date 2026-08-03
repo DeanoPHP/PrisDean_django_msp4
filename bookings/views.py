@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
+from django.utils import timezone
 
 from .forms import BookingForm
-from .models import Booking
+from .models import Booking, AvailableTimeSlots
 
 
 @login_required
@@ -111,3 +113,33 @@ def delete_booking(request, booking_id):
         "bookings/delete_booking.html",
         context,
     )
+
+
+def available_slots(request):
+    today = timezone.localdate()
+    slots = AvailableTimeSlots.objects.filter(
+        is_active=True,
+        date__gte=today,
+    ).order_by("date", "time")
+
+    calendar_events = []
+
+    for slot in slots:
+        is_booked = Booking.objects.filter(
+            booking_date=slot.date,
+            booking_time=slot.time,
+        ).exclude(status="cancelled").exists()
+
+        if not is_booked:
+            calendar_events.append(
+                {
+                    "id": slot.id,
+                    "title": f"Available - {slot.time.strftime('%H:%M')}",
+                    "start": (
+                        f"{slot.date.isoformat()}"
+                        f"T{slot.time.strftime('%H:%M:%S')}"
+                    ),
+                }
+            )
+
+    return JsonResponse(calendar_events, safe=False)
