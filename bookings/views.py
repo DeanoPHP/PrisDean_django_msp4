@@ -20,8 +20,7 @@ def create_booking(request):
 
             with transaction.atomic():
                 slot = (
-                    AvailableTimeSlots.objects
-                    .select_for_update()
+                    AvailableTimeSlots.objects.select_for_update()
                     .filter(
                         date=booking_date,
                         time=booking_time,
@@ -37,10 +36,14 @@ def create_booking(request):
                         "Please choose another slot.",
                     )
                 else:
-                    already_booked = Booking.objects.filter(
-                        booking_date=booking_date,
-                        booking_time=booking_time,
-                    ).exclude(status="cancelled").exists()
+                    already_booked = (
+                        Booking.objects.filter(
+                            booking_date=booking_date,
+                            booking_time=booking_time,
+                        )
+                        .exclude(status="cancelled")
+                        .exists()
+                    )
 
                     if already_booked:
                         form.add_error(
@@ -70,9 +73,9 @@ def create_booking(request):
 
 @login_required
 def my_bookings(request):
-    bookings = Booking.objects.filter(
-        user=request.user
-    ).order_by("booking_date", "booking_time")
+    bookings = Booking.objects.filter(user=request.user).order_by(
+        "booking_date", "booking_time"
+    )
 
     context = {
         "bookings": bookings,
@@ -118,12 +121,12 @@ def edit_booking(request, booking_id):
         "bookings/edit_booking.html",
         context,
     )
-    
+
 
 @login_required
 def delete_booking(request, booking_id):
     booking = get_object_or_404(
-        Booking, 
+        Booking,
         id=booking_id,
         user=request.user,
     )
@@ -132,10 +135,7 @@ def delete_booking(request, booking_id):
         booking.status = "cancelled"
         booking.save()
 
-        messages.success(
-            request,
-            "Your booking has been cancelled."
-        )
+        messages.success(request, "Your booking has been cancelled.")
 
         return redirect("my_bookings")
 
@@ -161,10 +161,14 @@ def available_slots(request):
     calendar_events = []
 
     for slot in slots:
-        is_booked = Booking.objects.filter(
-            booking_date=slot.date,
-            booking_time=slot.time,
-        ).exclude(status="cancelled").exists()
+        is_booked = (
+            Booking.objects.filter(
+                booking_date=slot.date,
+                booking_time=slot.time,
+            )
+            .exclude(status="cancelled")
+            .exists()
+        )
 
         if not is_booked:
             calendar_events.append(
@@ -172,8 +176,7 @@ def available_slots(request):
                     "id": slot.id,
                     "title": f"Available - {slot.time.strftime('%H:%M')}",
                     "start": (
-                        f"{slot.date.isoformat()}"
-                        f"T{slot.time.strftime('%H:%M:%S')}"
+                        f"{slot.date.isoformat()}" f"T{slot.time.strftime('%H:%M:%S')}"
                     ),
                 }
             )

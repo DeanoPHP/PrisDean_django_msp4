@@ -57,9 +57,7 @@ class BookingForm(forms.ModelForm):
 
         # When editing, exclude the current booking from the check.
         if self.instance and self.instance.pk:
-            existing_bookings = existing_bookings.exclude(
-                pk=self.instance.pk
-            )
+            existing_bookings = existing_bookings.exclude(pk=self.instance.pk)
 
         if existing_bookings.exists():
             raise forms.ValidationError(

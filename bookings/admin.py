@@ -30,18 +30,8 @@ class BookingAdmin(admin.ModelAdmin):
 
 @admin.register(AvailableTimeSlots)
 class AvailableTimeSlotAdmin(admin.ModelAdmin):
-    list_display = (
-        "date", 
-        "time", 
-        "is_active"
-    )
+    list_display = ("date", "time", "is_active")
 
-    list_filter = (
-        "is_active", 
-        "date"
-    )
+    list_filter = ("is_active", "date")
 
-    ordering = (
-        "date", 
-        "time"
-    )
+    ordering = ("date", "time")

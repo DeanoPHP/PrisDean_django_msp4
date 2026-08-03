@@ -1,68 +1,103 @@
 {% extends "base.html" %}
 
+{% block title %}
+  Change appointment
+{% endblock %}
+
 {% block content %}
+<div class="container my-5">
+  <h1 class="mb-3">Change your appointment</h1>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="text-center mb-4">
-                        Edit Booking
-                    </h2>
+  <div class="alert alert-info">
+    Your current appointment is
+    <strong>
+      {{ booking.booking_date|date:"j F Y" }}
+      at
+      {{ booking.booking_time|time:"H:i" }}
+    </strong>
+  </div>
 
-                    <form method="POST" novalidate>
-                        {% csrf_token %}
+  <p>
+    Select a new available appointment from the calendar.
+  </p>
 
-                        {% if form.errors %}
-                            <div class="alert alert-danger">
-                                Please check the form and try again.
-                            </div>
-                        {% endif %}
+  <div id="calendar" class="mb-5"></div>
 
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {% for error in form.non_field_errors %}
-                                    <p class="mb-0">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+  <form method="POST">
+    {% csrf_token %}
 
-                        <div class="mb-3">
-                            {{ form.booking_date.label_tag }}
-                            {{ form.booking_date }}
+    {{ form.non_field_errors }}
 
-                            {% for error in form.booking_date.errors %}
-                                <div class="text-danger small">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        </div>
+    {{ form.as_p }}
 
-                        <div class="mb-3">
-                            {{ form.booking_time.label_tag }}
-                            {{ form.booking_time }}
+    <button type="submit" class="btn btn-primary">
+      Confirm new appointment
+    </button>
 
-                            {% for error in form.booking_time.errors %}
-                                <div class="text-danger small">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="d-grid">
-                            <button
-                                type="submit"
-                                class="btn btn-primary">
-                                Update Booking
-                            </button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    <a
+      href="{% url 'my_bookings' %}"
+      class="btn btn-secondary"
+    >
+      Keep current appointment
+    </a>
+  </form>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendarElement = document.getElementById("calendar");
+
+    const calendar = new FullCalendar.Calendar(calendarElement, {
+      initialView: "dayGridMonth",
+
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,listMonth",
+      },
+
+      events: "{% url 'available_slots' %}",
+
+      eventTimeFormat: {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      },
+
+      eventClick: function (info) {
+        const selectedSlot = info.event.start;
+
+        const selectedDate = [
+          selectedSlot.getFullYear(),
+          String(selectedSlot.getMonth() + 1).padStart(2, "0"),
+          String(selectedSlot.getDate()).padStart(2, "0"),
+        ].join("-");
+
+        const selectedTime = [
+          String(selectedSlot.getHours()).padStart(2, "0"),
+          String(selectedSlot.getMinutes()).padStart(2, "0"),
+        ].join(":");
+
+        const dateInput = document.getElementById(
+          "id_booking_date"
+        );
+
+        const timeInput = document.getElementById(
+          "id_booking_time"
+        );
+
+        if (dateInput && timeInput) {
+          dateInput.value = selectedDate;
+          timeInput.value = selectedTime;
+
+          alert(
+            `New appointment selected: ${selectedDate} at ${selectedTime}`
+          );
+        }
+      },
+    });
+
+    calendar.render();
+  });
+</script>
 {% endblock %}
