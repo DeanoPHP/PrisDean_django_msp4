@@ -11,6 +11,17 @@
                         Book an Oven Clean
                     </h2>
 
+                    {% comment %} calendar container {% endcomment %}
+                    <div class="container my-5">
+                        <h2 class="mb-3">Choose an available appointment</h2>
+
+                        <p>
+                            Select an available time from the calendar.
+                        </p>
+
+                        <div id="calendar"></div>
+                    </div>
+
                     <form method="POST" novalidate>
                         {% csrf_token %}
 
@@ -64,5 +75,67 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const calendarElement = document.getElementById("calendar");
+
+        const calendar = new FullCalendar.Calendar(calendarElement, {
+            initialView: "dayGridMonth",
+
+            headerToolbar: {
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,listMonth",
+            },
+
+            events: "{% url 'available_slots' %}",
+
+            eventTimeFormat: {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            },
+
+            eventClick: function (info) {
+                const startDate = info.event.start;
+
+                const selectedDate = startDate
+                    .toISOString()
+                    .split("T")[0];
+
+                const selectedTime = startDate
+                    .toTimeString()
+                    .slice(0, 5);
+
+                const dateInput = document.getElementById(
+                    "id_booking_date"
+                );
+
+                const timeInput = document.getElementById(
+                    "id_booking_time"
+                );
+
+                if (dateInput && timeInput) {
+                    dateInput.value = selectedDate;
+                    timeInput.value = selectedTime;
+
+                    alert(
+                        `Selected: ${selectedDate} at ${selectedTime}`
+                    );
+
+                    dateInput.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+            },
+        });
+
+        calendar.render();
+    });
+</script>
 
 {% endblock %}
