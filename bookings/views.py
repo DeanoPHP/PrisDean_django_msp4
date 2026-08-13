@@ -236,6 +236,19 @@ def payment_success(request):
 
 @login_required
 def payment_cancelled(request):
+    booking_id = request.GET.get("booking_id")
+
+    if booking_id:
+        booking = get_object_or_404(
+            Booking,
+            id=booking_id,
+            user=request.user,
+        )
+
+        if booking.status == "pending":
+            booking.status = "cancelled"
+            booking.save()
+
     return render(
         request,
         "bookings/payment_cancelled.html",
