@@ -204,7 +204,7 @@ def create_checkout_session(request, booking_id):
             {
                 "price_data": {
                     "currency": "gbp",
-                    "unit_amount": 10000,
+                    "unit_amount": settings.BOOKING_PRICE,
                     "product_data": {
                         "name": "Professional Oven Clean",
                     },
@@ -295,7 +295,7 @@ def stripe_webhook(request):
                             "Your oven cleaning appointment has been confirmed.\n\n"
                             f"Date: {booking.booking_date.strftime('%d %B %Y')}\n"
                             f"Time: {booking.booking_time.strftime('%H:%M')}\n"
-                            "Price paid: £100.00\n\n"
+                            f"Price paid: {settings.BOOKING_PRICE_DISPLAY}\n\n"
                             "Thank you for choosing PrisDean.\n"
                         ),
                         from_email=None,
