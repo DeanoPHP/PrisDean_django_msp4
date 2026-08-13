@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+Payment Cancelled
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-5 text-center">
+    <h1>Payment cancelled</h1>
+
+    <p class="lead">
+        No payment was taken.
+    </p>
+
+    <a
+        href="{% url 'create_booking' %}"
+        class="btn btn-primary"
+    >
+        Return to booking
+    </a>
+</div>
+
+{% endblock %}

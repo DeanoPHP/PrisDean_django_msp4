@@ -206,10 +206,26 @@ def create_checkout_session(request):
         ],
         success_url=request.build_absolute_uri(
             "/bookings/payment-success/"
-        ),
+        ) + "?session_id={CHECKOUT_SESSION_ID}",
         cancel_url=request.build_absolute_uri(
             "/bookings/payment-cancelled/"
         ),
     )
 
     return redirect(checkout_session.url)
+
+
+@login_required
+def payment_success(request):
+    return render(
+        request,
+        "bookings/payment_success.html",
+    )
+
+
+@login_required
+def payment_cancelled(request):
+    return render(
+        request,
+        "bookings/payment_cancelled.html",
+    )
