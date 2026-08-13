@@ -58,11 +58,10 @@ def create_booking(request):
                         booking.user = request.user
                         booking.save()
 
-                        messages.success(
-                            request,
-                            "Your booking has been created.",
+                        return redirect(
+                            "create_checkout_session",
+                            booking_id=booking.id,
                         )
-                        return redirect("my_bookings")
     else:
         form = BookingForm()
 
@@ -187,7 +186,13 @@ def available_slots(request):
 
 
 @login_required
-def create_checkout_session(request):
+def create_checkout_session(request, booking_id):
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        user=request.user,
+    )
+
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
     checkout_session = stripe.checkout.Session.create(
@@ -204,11 +209,15 @@ def create_checkout_session(request):
                 "quantity": 1,
             }
         ],
+        metadata={
+            "booking_id": str(booking.id),
+            "user_id": str(request.user.id),
+        },
         success_url=request.build_absolute_uri(
             "/bookings/payment-success/"
         ) + "?session_id={CHECKOUT_SESSION_ID}",
         cancel_url=request.build_absolute_uri(
-            "/bookings/payment-cancelled/"
+            f"/bookings/payment-cancelled/?booking_id={booking.id}"
         ),
     )
 
