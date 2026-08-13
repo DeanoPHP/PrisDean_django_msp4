@@ -10,4 +10,5 @@ urlpatterns = [
     path("create-checkout-session/<int:booking_id>/", views.create_checkout_session, name="create_checkout_session"),
     path("payment-success/", views.payment_success, name="payment_success"),
     path("payment-cancelled/", views.payment_cancelled, name="payment_cancelled"),
+    path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
 ]

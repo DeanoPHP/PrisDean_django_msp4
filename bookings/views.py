@@ -1,5 +1,7 @@
 import stripe
 from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -201,9 +203,9 @@ def create_checkout_session(request, booking_id):
             {
                 "price_data": {
                     "currency": "gbp",
-                    "unit_amount": 6500,
+                    "unit_amount": 10000,
                     "product_data": {
-                        "name": "Standard Oven Clean",
+                        "name": "Professional Oven Clean",
                     },
                 },
                 "quantity": 1,
@@ -238,3 +240,40 @@ def payment_cancelled(request):
         request,
         "bookings/payment_cancelled.html",
     )
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            sig_header,
+            settings.STRIPE_WEBHOOK_SECRET,
+        )
+    except ValueError:
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError:
+        return HttpResponse(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+
+        booking_id = session["metadata"]["booking_id"]
+
+        if booking_id and session["payment_status"] == "paid":
+            try:
+                booking = Booking.objects.get(id=booking_id)
+
+                if booking.status == "pending":
+                    booking.status = "confirmed"
+                    booking.save()
+
+            except Booking.DoesNotExist:
+                pass
+
+    return HttpResponse(status=200)

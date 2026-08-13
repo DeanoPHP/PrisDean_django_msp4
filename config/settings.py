@@ -27,6 +27,10 @@ SECRET_KEY = "django-insecure-^c^%8-l8v6g8^^c93fx5g5rns_v9w@2an8@%@^lmkx+k-#qqyf
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 
+STRIPE_WEBHOOK_SECRET = os.environ.get(
+    "STRIPE_WEBHOOK_SECRET"
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
