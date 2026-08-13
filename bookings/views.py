@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -285,6 +286,22 @@ def stripe_webhook(request):
                 if booking.status == "pending":
                     booking.status = "confirmed"
                     booking.save()
+
+                    send_mail(
+                        subject="PrisDean Booking Confirmation",
+                        message=(
+                            f"Hi {booking.user.first_name or booking.user.username},\n\n"
+                            "Thank you for your payment.\n\n"
+                            "Your oven cleaning appointment has been confirmed.\n\n"
+                            f"Date: {booking.booking_date.strftime('%d %B %Y')}\n"
+                            f"Time: {booking.booking_time.strftime('%H:%M')}\n"
+                            "Price paid: £100.00\n\n"
+                            "Thank you for choosing PrisDean.\n"
+                        ),
+                        from_email=None,
+                        recipient_list=[booking.user.email],
+                        fail_silently=False,
+                    )
 
             except Booking.DoesNotExist:
                 pass
