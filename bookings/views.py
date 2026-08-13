@@ -139,7 +139,25 @@ def delete_booking(request, booking_id):
         booking.status = "cancelled"
         booking.save()
 
-        messages.success(request, "Your booking has been cancelled.")
+        send_mail(
+            subject="PrisDean Booking Cancelled",
+            message=(
+                f"Hi {booking.user.first_name or booking.user.username},\n\n"
+                "Your booking has been cancelled successfully.\n\n"
+                f"Date: {booking.booking_date.strftime('%d %B %Y')}\n"
+                f"Time: {booking.booking_time.strftime('%H:%M')}\n\n"
+                "If this was a mistake, you can make a new booking at any time.\n\n"
+                "Thank you for choosing PrisDean."
+            ),
+            from_email=None,
+            recipient_list=[booking.user.email],
+            fail_silently=False,
+        )
+
+        messages.success(
+            request,
+            "Your booking has been cancelled.",
+        )
 
         return redirect("my_bookings")
 
