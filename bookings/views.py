@@ -1,3 +1,5 @@
+import stripe
+from django.conf import settings
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -182,3 +184,32 @@ def available_slots(request):
             )
 
     return JsonResponse(calendar_events, safe=False)
+
+
+@login_required
+def create_checkout_session(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    checkout_session = stripe.checkout.Session.create(
+        mode="payment",
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "gbp",
+                    "unit_amount": 6500,
+                    "product_data": {
+                        "name": "Standard Oven Clean",
+                    },
+                },
+                "quantity": 1,
+            }
+        ],
+        success_url=request.build_absolute_uri(
+            "/bookings/payment-success/"
+        ),
+        cancel_url=request.build_absolute_uri(
+            "/bookings/payment-cancelled/"
+        ),
+    )
+
+    return redirect(checkout_session.url)

@@ -7,4 +7,5 @@ urlpatterns = [
     path("edit/<int:booking_id>/", views.edit_booking, name="edit_booking"),
     path("delete/<int:booking_id>/", views.delete_booking, name="delete_booking"),
     path("available-slots/", views.available_slots, name="available_slots"),
+    path("create-checkout-session/", views.create_checkout_session, name="create_checkout_session"),
 ]
