@@ -72,6 +72,9 @@ body {
 
 .trust-card {
     background: white;
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
     padding: 2rem;
     border-radius: 12px;
     height: 100%;
@@ -94,7 +97,10 @@ body {
 
 /* How it works section */
 .how-it-works {
-    background-color: #ffffff;
+    background-color: #a9a4a4;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
 }
 
 .step-card {
@@ -127,6 +133,9 @@ body {
 /* Review section */
 .reviews-section {
     background-color: #f8f9fa;
+    min-height: 50vh;
+    align-items: center;
+    display: flex;
 }
 
 .review-card {
