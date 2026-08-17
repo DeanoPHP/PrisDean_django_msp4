@@ -731,7 +731,80 @@ required coding standards.
 
 ## Deployment
 
-Deployment instructions will be added once the project is ready for production.
+PrisDean is deployed using Heroku with a Heroku PostgreSQL database.
+
+### Live Site
+
+The deployed application can be accessed at:
+
+https://prisdean-684be6a15d1e.herokuapp.com/
+
+### Heroku Deployment
+
+The following steps were used to deploy the project:
+
+1. Create a new application in Heroku.
+2. Add Heroku Postgres to the application.
+3. Add the required environment variables using Heroku Config Vars.
+4. Install Gunicorn, WhiteNoise and dj-database-url.
+5. Create a `Procfile` containing:
+
+       web: gunicorn config.wsgi
+
+6. Create a `.python-version` file containing:
+
+       3.12
+
+7. Configure Django to use the Heroku `DATABASE_URL`.
+8. Configure WhiteNoise for static files.
+9. Add the Heroku application domain to `ALLOWED_HOSTS`.
+10. Connect the local Git repository to Heroku.
+11. Deploy the application using:
+
+       git push heroku main
+
+12. Apply the database migrations:
+
+       heroku run python manage.py migrate -a prisdean
+
+13. Create the administrator account:
+
+       heroku run python manage.py createsuperuser -a prisdean
+
+### Environment Variables
+
+Sensitive information is stored using Heroku Config Vars and is not
+committed to the GitHub repository.
+
+The deployed application requires environment variables including:
+
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `STRIPE_PUBLIC_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
+### Stripe Webhook
+
+A Stripe webhook endpoint was created for the deployed application.
+
+The webhook listens for:
+
+    checkout.session.completed
+
+The deployed webhook endpoint is:
+
+    https://prisdean-684be6a15d1e.herokuapp.com/bookings/stripe-webhook/
+
+When Stripe confirms that payment has been completed, the webhook
+updates the corresponding booking from `pending` to `confirmed`.
+
+### Production Configuration
+
+The deployed application runs with Django debug mode disabled.
+
+Static files are served using WhiteNoise and the production application
+is served using Gunicorn.
 
 ---
 
