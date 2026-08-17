@@ -234,9 +234,8 @@ def create_checkout_session(request, booking_id):
             "booking_id": str(booking.id),
             "user_id": str(request.user.id),
         },
-        success_url=request.build_absolute_uri(
-            "/bookings/payment-success/"
-        ) + "?session_id={CHECKOUT_SESSION_ID}",
+        success_url=request.build_absolute_uri("/bookings/payment-success/")
+        + "?session_id={CHECKOUT_SESSION_ID}",
         cancel_url=request.build_absolute_uri(
             f"/bookings/payment-cancelled/?booking_id={booking.id}"
         ),
@@ -308,7 +307,8 @@ def stripe_webhook(request):
                     send_mail(
                         subject="PrisDean Booking Confirmation",
                         message=(
-                            f"Hi {booking.user.first_name or booking.user.username},\n\n"
+                            f"Hi {booking.user.first_name or booking.user.username},"
+                            "\n\n"
                             "Thank you for your payment.\n\n"
                             "Your oven cleaning appointment has been confirmed.\n\n"
                             f"Date: {booking.booking_date.strftime('%d %B %Y')}\n"

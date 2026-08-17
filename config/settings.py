@@ -15,11 +15,9 @@ STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 
 # Stripe webhook
-STRIPE_WEBHOOK_SECRET = os.environ.get(
-    "STRIPE_WEBHOOK_SECRET"
-)
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 
-# Hard code price so I only need to change this 
+# Hard code price so I only need to change this
 BOOKING_PRICE = 10000
 BOOKING_PRICE_DISPLAY = "£100.00"
 
