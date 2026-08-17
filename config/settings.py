@@ -29,8 +29,11 @@ DEFAULT_FROM_EMAIL = "PrisDean <noreply@prisdean.com>"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "prisdean-684be6a15d1e.herokuapp.com",
+]
 
 # Application definition
 INSTALLED_APPS = [
