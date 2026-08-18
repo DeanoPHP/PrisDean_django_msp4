@@ -22,9 +22,12 @@ STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 BOOKING_PRICE = 10000
 BOOKING_PRICE_DISPLAY = "£100.00"
 
-# Test email
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    DEFAULT_FROM_EMAIL = "PrisDean <deanolark@gmail.com>"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
@@ -37,12 +40,8 @@ else:
 
     DEFAULT_FROM_EMAIL = os.environ.get(
         "DEFAULT_FROM_EMAIL",
-        "PrisDean <your-email@example.com>",
+        "PrisDean <deanolark@gmail.com>",
     )
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "localhost",
