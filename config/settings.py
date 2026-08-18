@@ -46,7 +46,14 @@ else:
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "prisdean.com",
+    "www.prisdean.com",
     "prisdean-684be6a15d1e.herokuapp.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://prisdean.com",
+    "https://www.prisdean.com",
 ]
 
 # Application definition
