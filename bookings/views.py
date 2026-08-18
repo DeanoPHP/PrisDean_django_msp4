@@ -1,4 +1,6 @@
 import stripe
+import os
+import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +14,47 @@ from django.utils import timezone
 
 from .forms import BookingForm
 from .models import AvailableTimeSlots, Booking
+
+
+def format_uk_phone(number):
+    if not number:
+        return None
+    
+    number = number.replace(" ", "")
+
+    if number.startswith("07"):
+        return "+44" + number[1:]
+    return number
+
+
+def send_sms(recipient, message):
+    api_key = os.environ.get("BREVO_API_KEY")
+
+    if not api_key or not recipient:
+        return
+
+    url = "https://api.brevo.com/v3/transactionalSMS/send"
+
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json",
+    }
+
+    data = {
+        "sender": "PrisDean",
+        "recipient": recipient,
+        "content": message,
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=data,
+        timeout=10,
+    )
+
+    response.raise_for_status()
 
 
 @login_required
@@ -304,21 +347,58 @@ def stripe_webhook(request):
                     booking.status = "confirmed"
                     booking.save()
 
+                    name = (
+                        booking.user.first_name
+                        or booking.user.username
+                    )
+
+                    # Send customer confirmation email.
                     send_mail(
                         subject="PrisDean Booking Confirmation",
                         message=(
-                            f"Hi {booking.user.first_name or booking.user.username},"
-                            "\n\n"
+                            f"Hi {name},\n\n"
                             "Thank you for your payment.\n\n"
-                            "Your oven cleaning appointment has been confirmed.\n\n"
-                            f"Date: {booking.booking_date.strftime('%d %B %Y')}\n"
-                            f"Time: {booking.booking_time.strftime('%H:%M')}\n"
-                            f"Price paid: {settings.BOOKING_PRICE_DISPLAY}\n\n"
+                            "Your oven cleaning appointment "
+                            "has been confirmed.\n\n"
+                            f"Date: "
+                            f"{booking.booking_date.strftime('%d %B %Y')}\n"
+                            f"Time: "
+                            f"{booking.booking_time.strftime('%H:%M')}\n"
+                            f"Price paid: "
+                            f"{settings.BOOKING_PRICE_DISPLAY}\n\n"
                             "Thank you for choosing PrisDean.\n"
                         ),
                         from_email=None,
                         recipient_list=[booking.user.email],
                         fail_silently=False,
+                    )
+
+                    # Send customer SMS.
+                    customer_phone = format_uk_phone(
+                        booking.user.profile.telephone
+                    )
+
+                    send_sms(
+                        customer_phone,
+                        (
+                            "PrisDean: Your oven cleaning is confirmed "
+                            f"for {booking.booking_date.strftime('%d %b %Y')} "
+                            f"at {booking.booking_time.strftime('%H:%M')}."
+                        ),
+                    )
+
+                    # Send owner SMS.
+                    owner_phone = format_uk_phone(
+                        os.environ.get("OWNER_PHONE")
+                    )
+
+                    send_sms(
+                        owner_phone,
+                        (
+                            f"PrisDean: New booking from {name} "
+                            f"on {booking.booking_date.strftime('%d %b %Y')} "
+                            f"at {booking.booking_time.strftime('%H:%M')}."
+                        ),
                     )
 
             except Booking.DoesNotExist:
