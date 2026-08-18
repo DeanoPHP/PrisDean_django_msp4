@@ -150,7 +150,6 @@ As the site owner, I want the application to:
 ---
 
 ## Future Features
-- SMS notifications
 - Customer reviews
 - Recurring bookings
 - Multiple cleaning services
