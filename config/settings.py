@@ -23,8 +23,23 @@ BOOKING_PRICE = 10000
 BOOKING_PRICE_DISPLAY = "£100.00"
 
 # Test email
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "PrisDean <noreply@prisdean.com>"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+    EMAIL_HOST = "smtp-relay.brevo.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+    DEFAULT_FROM_EMAIL = os.environ.get(
+        "DEFAULT_FROM_EMAIL",
+        "PrisDean <your-email@example.com>",
+    )
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
