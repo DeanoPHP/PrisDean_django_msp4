@@ -348,6 +348,39 @@ to build the PrisDean application.
 - **psycopg2-binary** - Provides the connection between Django and
   PostgreSQL.
 
+### Brevo
+
+Brevo is used for transactional communication within the application.
+
+It provides:
+
+- SMTP delivery for customer booking confirmation emails.
+- Transactional SMS messages for customer booking confirmations.
+- SMS notifications to the business owner when a new booking is confirmed.
+
+Sensitive Brevo credentials are stored as Heroku Config Vars and are not
+committed to the GitHub repository.
+
+### Email and SMS Booking Notifications
+
+When a customer successfully completes payment through Stripe, the booking
+is automatically confirmed using a Stripe webhook.
+
+The customer then receives:
+
+- A booking confirmation email containing the appointment date, time and
+  amount paid.
+- An SMS confirmation containing the appointment date and time.
+
+The business owner also receives an SMS notification when a new paid booking
+is confirmed.
+
+Transactional emails are sent using Brevo SMTP, while SMS notifications are
+sent using the Brevo transactional SMS API.
+
+Customer telephone numbers entered in UK format are converted to international
+format before being sent to the SMS service.
+
 ### Database
 
 - **PostgreSQL** - Used as the relational database for storing users,
@@ -478,7 +511,6 @@ Implementing Docker helped develop an understanding of:
 - Deployment preparation
 
 ---
-
 
 ## Testing
 
@@ -778,26 +810,33 @@ committed to the GitHub repository.
 
 The deployed application requires environment variables including:
 
-- `SECRET_KEY`
-- `DATABASE_URL`
-- `STRIPE_PUBLIC_KEY`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `EMAIL_HOST_USER` - Brevo SMTP username.
+- `EMAIL_HOST_PASSWORD` - Brevo SMTP key.
+- `DEFAULT_FROM_EMAIL` - verified sender used for customer emails.
+- `BREVO_API_KEY` - API key used for transactional SMS messages.
+- `OWNER_PHONE` - business owner's telephone number for booking notifications.
 
 ### Stripe Webhook
 
-A Stripe webhook endpoint was created for the deployed application.
+A Stripe webhook is used to securely confirm successful payments.
 
-The webhook listens for:
+The application listens for the:
 
     checkout.session.completed
 
-The deployed webhook endpoint is:
+event.
 
-    https://prisdean-684be6a15d1e.herokuapp.com/bookings/stripe-webhook/
+When a successful payment is received, the application:
 
-When Stripe confirms that payment has been completed, the webhook
-updates the corresponding booking from `pending` to `confirmed`.
+1. Retrieves the associated booking.
+2. Changes the booking status from `pending` to `confirmed`.
+3. Sends the customer a confirmation email using Brevo.
+4. Sends the customer a booking confirmation SMS using Brevo.
+5. Sends the business owner an SMS notification containing the new booking
+   details.
+
+This ensures that bookings are only confirmed after Stripe has successfully
+processed the payment.
 
 ### Production Configuration
 
