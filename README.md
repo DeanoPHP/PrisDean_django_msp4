@@ -1,4 +1,4 @@
-![PrisDean responsive design](media/images/responsive.png)
+![PrisDean responsive design](static/images/responsive.png)
 
 # PrisDean
 
