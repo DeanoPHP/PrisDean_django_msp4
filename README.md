@@ -1,3 +1,5 @@
+![PrisDean responsive design](media/images/responsive.png)
+
 # PrisDean
 
 PrisDean is a full-stack Django web application for an oven cleaning
@@ -684,6 +686,35 @@ the Django settings. The Stripe secret key is then supplied when
 creating Checkout sessions.
 
 Sensitive Stripe keys are not stored directly in the source code.
+
+### Am I Responsive - Website Would Not Display
+
+**Bug:**  
+When testing the deployed PrisDean website using Am I Responsive, the
+Heroku site would not display inside the device previews.
+
+**Cause:**  
+Am I Responsive loads websites inside an iframe. Django's built-in
+clickjacking protection prevented the PrisDean homepage from being displayed
+inside an external iframe.
+
+**Fix:**  
+I temporarily imported Django's `xframe_options_exempt` decorator and applied
+it to the homepage view:
+
+    from django.views.decorators.clickjacking import xframe_options_exempt
+
+
+    @xframe_options_exempt
+    def home(request):
+        return render(request, "home/index.html")
+
+This allowed the homepage to load correctly inside Am I Responsive so that
+the responsive design could be tested and documented.
+
+Once the responsive screenshot had been created, the exemption was removed
+so that Django's normal clickjacking protection remained enabled on the
+deployed application.
 
 ### Stripe Webhook Secret
 
