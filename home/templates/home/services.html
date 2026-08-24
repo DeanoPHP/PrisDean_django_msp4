@@ -1,7 +1,644 @@
 {% extends "base.html" %}
-
-{% block title %}Services | PrisDean{% endblock %}
+{% load static %}
 
 {% block content %}
+
+<!-- HERO -->
+<section class="services-hero text-white d-flex align-items-center">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-7">
+
+                <p class="text-primary fw-bold text-uppercase">
+                    Professional Oven Cleaning
+                </p>
+
+                <h1 class="display-2 fw-bold text-uppercase">
+                    We Clean.<br>
+                    You Enjoy.
+                </h1>
+
+                <p class="lead my-4">
+                    A thorough, reliable and professional oven cleaning
+                    service that brings the sparkle back to your kitchen.
+                </p>
+
+                <a
+                    href="{% url 'create_booking' %}"
+                    class="btn btn-primary btn-lg"
+                >
+                    Book Your Clean
+                </a>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- MAIN SERVICE -->
+<section class="py-5">
+    <div class="container py-lg-5">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <img
+                    src="{% static 'images/services-hero.png' %}"
+                    class="img-fluid rounded-4 shadow"
+                    alt="Professional oven cleaning"
+                >
+            </div>
+
+            <div class="col-lg-6">
+
+                <p class="text-primary fw-bold text-uppercase mb-2">
+                    Our Service
+                </p>
+
+                <h2 class="display-5 fw-bold mb-4">
+                    Professional Oven Cleaning
+                </h2>
+
+                <p class="lead text-secondary">
+                    Cleaning an oven can be one of the toughest jobs
+                    in the kitchen. PrisDean takes care of the hard
+                    work for you.
+                </p>
+
+                <p class="text-secondary">
+                    We remove built-up grease, burnt-on food and
+                    stubborn deposits to leave your oven looking
+                    fresh and clean.
+                </p>
+
+                <ul class="list-group list-group-flush mb-4">
+
+                    <li class="list-group-item px-0">
+                        ✓ Deep interior oven clean
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Oven racks and trays cleaned
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Door and glass cleaned
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Grease and burnt-on deposits removed
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Exterior cleaned and polished
+                    </li>
+
+                </ul>
+
+                <a
+                    href="{% url 'create_booking' %}"
+                    class="btn btn-outline-primary"
+                >
+                    Book an Appointment
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- WHAT'S INCLUDED -->
+<section class="py-5 bg-light">
+    <div class="container py-lg-4">
+
+        <div class="text-center mb-5">
+
+            <p class="text-primary fw-bold text-uppercase mb-2">
+                What We Do
+            </p>
+
+            <h2 class="display-5 fw-bold">
+                What's Included?
+            </h2>
+
+            <p class="lead text-secondary">
+                A detailed clean designed to bring your oven
+                back to its best.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            🔥
+                        </div>
+
+                        <h3 class="h4">
+                            Deep Oven Clean
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Built-up grease, food and stubborn deposits
+                            are thoroughly removed from inside your oven.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            🧽
+                        </div>
+
+                        <h3 class="h4">
+                            Racks & Trays
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Removable oven racks and trays are cleaned
+                            to remove grease and burnt-on residue.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            ✨
+                        </div>
+
+                        <h3 class="h4">
+                            Door & Glass
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Oven doors and glass are carefully cleaned
+                            for a fresh and polished finish.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            🫧
+                        </div>
+
+                        <h3 class="h4">
+                            Grease Removal
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Tough grease and cooking residue are removed
+                            from the surfaces of your oven.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            🚪
+                        </div>
+
+                        <h3 class="h4">
+                            Oven Exterior
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            The outside of your oven is cleaned and
+                            polished to complete the job.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            ⭐
+                        </div>
+
+                        <h3 class="h4">
+                            Final Finish
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            We finish the job with attention to detail
+                            so your oven is left looking its best.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- OVEN TYPES -->
+<section class="py-5">
+    <div class="container py-lg-5">
+
+        <div class="text-center mb-5">
+
+            <p class="text-primary fw-bold text-uppercase mb-2">
+                What We Clean
+            </p>
+
+            <h2 class="display-5 fw-bold">
+                Ovens & Appliances
+            </h2>
+
+            <p class="lead text-secondary">
+                Professional cleaning for a range of domestic
+                kitchen appliances.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 bg-dark text-white border-0 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            ♨️
+                        </div>
+
+                        <h3 class="h5">
+                            Single Ovens
+                        </h3>
+
+                        <p class="text-light small mb-0">
+                            Thorough cleaning for standard
+                            single ovens.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 bg-dark text-white border-0 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            ♨️
+                        </div>
+
+                        <h3 class="h5">
+                            Double Ovens
+                        </h3>
+
+                        <p class="text-light small mb-0">
+                            Complete cleaning for both
+                            oven compartments.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 bg-dark text-white border-0 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            🍳
+                        </div>
+
+                        <h3 class="h5">
+                            Hobs
+                        </h3>
+
+                        <p class="text-light small mb-0">
+                            Cleaning for kitchen hobs
+                            and cooking surfaces.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 bg-dark text-white border-0 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="display-5 mb-3">
+                            👨‍🍳
+                        </div>
+
+                        <h3 class="h5">
+                            Range Cookers
+                        </h3>
+
+                        <p class="text-light small mb-0">
+                            Cleaning for larger ovens
+                            and range-style cookers.
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="py-5 bg-light">
+    <div class="container py-lg-5">
+
+        <div class="text-center mb-5">
+
+            <p class="text-primary fw-bold text-uppercase mb-2">
+                Simple & Easy
+            </p>
+
+            <h2 class="display-5 fw-bold">
+                How It Works
+            </h2>
+
+        </div>
+
+
+        <div class="row g-5 text-center">
+
+            <div class="col-md-4">
+
+                <p class="display-2 fw-bold text-primary opacity-25 mb-0">
+                    01
+                </p>
+
+                <div class="display-5 mb-3">
+                    📅
+                </div>
+
+                <h3 class="h4 fw-bold">
+                    Book Online
+                </h3>
+
+                <p class="text-secondary">
+                    Choose an available date and time
+                    that works for you.
+                </p>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <p class="display-2 fw-bold text-primary opacity-25 mb-0">
+                    02
+                </p>
+
+                <div class="display-5 mb-3">
+                    🧽
+                </div>
+
+                <h3 class="h4 fw-bold">
+                    We Clean
+                </h3>
+
+                <p class="text-secondary">
+                    We arrive at your home and give
+                    your oven a thorough clean.
+                </p>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <p class="display-2 fw-bold text-primary opacity-25 mb-0">
+                    03
+                </p>
+
+                <div class="display-5 mb-3">
+                    ✨
+                </div>
+
+                <h3 class="h4 fw-bold">
+                    Enjoy The Results
+                </h3>
+
+                <p class="text-secondary">
+                    Sit back and enjoy your fresh,
+                    clean oven.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- OPTIONAL EXTRAS -->
+<section class="py-5">
+    <div class="container py-lg-5">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+
+                <p class="text-primary fw-bold text-uppercase mb-2">
+                    Optional Extras
+                </p>
+
+                <h2 class="display-5 fw-bold">
+                    Need Something Extra?
+                </h2>
+
+                <p class="lead text-secondary">
+                    Additional appliance cleaning can be added
+                    to your oven cleaning appointment.
+                </p>
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item px-0">
+                        ✓ Hob Cleaning
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Extractor Hood Cleaning
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Grill Cleaning
+                    </li>
+
+                    <li class="list-group-item px-0">
+                        ✓ Microwave Cleaning
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="bg-dark text-white rounded-4 p-5 shadow">
+
+                    <div class="display-5 mb-3">
+                        ✨
+                    </div>
+
+                    <h3 class="h2 fw-bold">
+                        Build Your Clean
+                    </h3>
+
+                    <p class="text-light">
+                        Choose the service you need and add any
+                        extras when making your booking.
+                    </p>
+
+                    <a
+                        href="{% url 'create_booking' %}"
+                        class="btn btn-primary"
+                    >
+                        Start Booking
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- TRUST -->
+<section class="bg-light py-4">
+    <div class="container">
+
+        <div class="row g-4 text-center">
+
+            <div class="col-6 col-lg-3">
+                <div class="fw-bold">
+                    🛡️ Fully Insured
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="fw-bold">
+                    🌱 Eco-Friendly
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="fw-bold">
+                    ⭐ Quality Service
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="fw-bold">
+                    ✨ Great Results
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="bg-primary text-white text-center py-5">
+
+    <div class="container py-4">
+
+        <p class="fw-bold text-uppercase mb-2">
+            Let Us Do The Hard Work
+        </p>
+
+        <h2 class="display-4 fw-bold">
+            Ready For A Cleaner Oven?
+        </h2>
+
+        <p class="lead mb-4">
+            Book your professional oven cleaning
+            appointment today.
+        </p>
+
+        <a
+            href="{% url 'create_booking' %}"
+            class="btn btn-light btn-lg"
+        >
+            Book Your Clean
+        </a>
+
+    </div>
+
+</section>
 
 {% endblock %}
