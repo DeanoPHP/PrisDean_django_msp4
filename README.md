@@ -1,7 +1,8 @@
 ![PrisDean responsive design](static/images/responsive.png)
 
-# PrisDean
+[Click here to go to PrisDean.com](https://www.prisdean.com)
 
+# PrisDean
 PrisDean is a full-stack Django web application for an oven cleaning
 business. The application allows customers to create an account, view
 available appointment slots, book an oven cleaning service and securely
@@ -193,7 +194,6 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 ```
-
 ---
 
 ## UX and Design
