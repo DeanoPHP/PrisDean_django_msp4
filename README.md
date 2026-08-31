@@ -277,18 +277,10 @@ screens.
 Wireframes were used during the planning and design stage to establish
 the basic layout and structure of the application.
 
-Screenshots of the wireframes can be added below:
-
-![Home Page Wireframe](docs/wireframes/home-wireframe.png)
+### Home desktop layout
+![Home Page Wireframe](static/images/wireframes/home-desktop.png)
 
 ![Booking Page Wireframe](docs/wireframes/booking-wireframe.png)
-
-### Screenshots
-
-Screenshots of the completed application will be added to demonstrate
-the final design on desktop and mobile devices.
-
----
 
 ## Project Architecture
 
