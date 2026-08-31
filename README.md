@@ -272,15 +272,28 @@ Special attention was given to the navigation, hero content, forms
 and booking interface to ensure that they remain usable on smaller
 screens.
 
-### Wireframes
+## Wireframes
 
 Wireframes were used during the planning and design stage to establish
 the basic layout and structure of the application.
 
 ### Home desktop layout
-![Home Page Wireframe](static/images/wireframes/home-desktop.png)
+![Home Page desktop Wireframe](static/images/wireframes/home-desktop.png)
 
-![Booking Page Wireframe](docs/wireframes/booking-wireframe.png)
+### Home mobile layout
+![Home Page mobile Wireframe](static/images/wireframes/home-mobile.png)
+
+### Services desktop layout
+![Services Page desktop Wireframe](docs/wireframes/booking-wireframe.png)
+
+### services mobile layout
+![Services Page mobile Wireframe](docs/wireframes/booking-wireframe.png)
+
+### Booking desktop layout
+![Booking Page desktop Wireframe](docs/wireframes/booking-wireframe.png)
+
+### Booking mobile layout
+![Booking Page mobile Wireframe](docs/wireframes/booking-wireframe.png)
 
 ## Project Architecture
 
