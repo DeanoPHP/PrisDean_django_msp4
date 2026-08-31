@@ -274,8 +274,7 @@ screens.
 
 ## Wireframes
 
-Wireframes were used during the planning and design stage to establish
-the basic layout and structure of the application.
+Figma was used to create the wireframes for the PrisDean website. The wireframes helped plan the layout and structure of each page before development, including the placement of navigation, content sections, buttons and other key elements. Desktop and mobile wireframes were created to help plan a responsive design across different screen sizes.
 
 ### Home desktop layout
 ![Home Page desktop Wireframe](static/images/wireframes/home-desktop.png)
