@@ -288,11 +288,8 @@ Figma was used to create the wireframes for the PrisDean website. The wireframes
 ### services mobile layout
 ![Services Page mobile Wireframe](static/images/wireframes/services-mobile.png)
 
-### Booking desktop layout
-![Booking Page desktop Wireframe](docs/wireframes/booking-wireframe.png)
-
-### Booking mobile layout
-![Booking Page mobile Wireframe](docs/wireframes/booking-wireframe.png)
+### Booking layout
+![Booking Page Wireframe](static/images/wireframes/booking.png)
 
 ## Project Architecture
 
