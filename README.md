@@ -3,6 +3,7 @@
 [Click here to go to PrisDean.com](https://www.prisdean.com)
 
 # PrisDean
+
 PrisDean is a full-stack Django web application for an oven cleaning
 business. The application allows customers to create an account, view
 available appointment slots, book an oven cleaning service and securely
@@ -11,6 +12,8 @@ pay for their booking using Stripe.
 The website provides customers with a simple booking process while also
 providing the business administrator with tools to manage available
 appointment slots and customer bookings.
+
+---
 
 ## Project Goals
 
@@ -29,6 +32,7 @@ The application was designed to allow customers to:
 - Reschedule or cancel a booking.
 - Receive email confirmation when a booking is confirmed.
 - Receive email confirmation when a booking is cancelled.
+- Receive SMS confirmation following a successful booking.
 
 The application also provides administration functionality that allows
 the business owner to manage available appointment slots and customer
@@ -57,6 +61,7 @@ As a customer, I want to:
 - Pay securely for my oven cleaning using Stripe.
 - See confirmation that my payment was successful.
 - Receive an email confirming my booking after successful payment.
+- Receive an SMS confirming my booking.
 - Receive an email when I cancel a confirmed booking.
 - View the current status of my booking.
 
@@ -71,6 +76,7 @@ As the business administrator, I want to:
 - View the status of each booking.
 - Update booking information when necessary.
 - Prevent booked appointment slots from being offered to another customer.
+- Receive an SMS notification when a new paid booking is confirmed.
 
 ### Site Owner Goals
 
@@ -82,29 +88,7 @@ As the site owner, I want the application to:
 - Make cancelled appointment slots available again.
 - Reduce the need to manually manage appointments.
 - Provide a central administration area for managing bookings and availability.
-
-## Technologies Used
-
-### Backend
-
-- Python
-- Django
-- PostgreSQL
-- Django Allauth
-- Stripe
-
-### Frontend
-
-- HTML5
-- CSS3
-- Bootstrap 5
-- JavaScript
-
-### Development & Deployment
-
-- Docker
-- Git
-- GitHub
+- Provide automatic booking notifications to customers and the business owner.
 
 ---
 
@@ -112,88 +96,49 @@ As the site owner, I want the application to:
 
 ### User Accounts
 
-- User registration
-- User login/logout
-- Automatic profile creation using Django signals
+- Customer registration using Django Allauth.
+- Secure user login and logout.
+- Automatic profile creation using Django signals.
+- Customer profile information.
+- Authentication-aware navigation.
 
 ### Booking System
 
-- Calendar-based booking system
-- Appointment management
-- Availability control
+- Interactive calendar-based booking system using FullCalendar.
+- Appointment slots created and managed by the administrator.
+- Only active and available appointment slots are displayed.
+- Prevention of double bookings.
+- Customers can view their existing bookings.
+- Customers can reschedule bookings.
+- Customers can cancel bookings.
+- Cancelled appointment slots become available again.
+- Booking status management.
 
 ### Payments
 
-- Secure Stripe payment integration
+- Secure payment processing using Stripe Checkout.
+- New bookings begin with a `pending` status.
+- Stripe webhooks confirm bookings following successful payment.
+- Stripe metadata links Checkout sessions to the appropriate booking.
+- Cancelled Stripe Checkout sessions release pending appointment slots.
 
-### Admin Features
+### Email and SMS Notifications
 
-- Manage bookings
-- Manage users
-- Manage available appointment slots
+- Booking confirmation emails sent using Brevo SMTP.
+- Booking confirmation SMS messages sent to customers.
+- Cancellation emails sent when confirmed bookings are cancelled.
+- SMS notifications sent to the business owner when a new paid booking is confirmed.
+- UK telephone numbers are converted to international format before being sent to the SMS service.
 
----
+### Administrator Features
 
-## Database Structure
+- Secure Django administration interface.
+- Create and manage appointment slots.
+- Activate or deactivate appointment availability.
+- View and manage customer bookings.
+- View booking statuses.
+- Manage registered users.
 
-### User
-- Django built-in User model
-- Authentication handled by Django Allauth
-
-### Profile
-- One-to-One relationship with User
-- Stores customer information
-
-### Booking
-- Customer booking details
-- Date and time slot
-- Booking status
-- Payment status
-
----
-
-## Future Features
-- Customer reviews
-- Recurring bookings
-- Multiple cleaning services
-- Payment reciepts
-- Rescheduling confirmtion
-- Follow up emails after cleaning
-- Additional payment options
-
----
-
-## User Profile Automation
-
-To improve the user experience, a profile is automatically created whenever a new user registers.
-
-### Technologies Used
-
-- Django Signals
-- Django Allauth
-- One-to-One Relationships
-
-### How It Works
-
-When a user successfully registers through Django Allauth, a Django signal listens for the creation of a new User object.
-
-The signal automatically creates a corresponding Profile object linked to the user through a One-to-One relationship.
-
-This ensures that every registered user has a profile without requiring additional setup steps.
-
-### Example Signal
-
-```python
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
-from django.dispatch import receiver
-from .models import Profile
-
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-```
 ---
 
 ## UX and Design
@@ -272,24 +217,134 @@ Special attention was given to the navigation, hero content, forms
 and booking interface to ensure that they remain usable on smaller
 screens.
 
+---
+
 ## Wireframes
 
-Figma was used to create the wireframes for the PrisDean website. The wireframes helped plan the layout and structure of each page before development, including the placement of navigation, content sections, buttons and other key elements. Desktop and mobile wireframes were created to help plan a responsive design across different screen sizes.
+Figma was used to create the wireframes for the PrisDean website.
 
-### Home desktop layout
+The wireframes helped plan the layout and structure of each page before
+development, including the placement of navigation, content sections,
+buttons and other key elements.
+
+Desktop and mobile wireframes were created to help plan a responsive
+design across different screen sizes.
+
+### Home Desktop Layout
+
 ![Home Page desktop Wireframe](static/images/wireframes/home-desktop.png)
 
-### Home mobile layout
+### Home Mobile Layout
+
 ![Home Page mobile Wireframe](static/images/wireframes/home-mobile.png)
 
-### Services desktop layout
+### Services Desktop Layout
+
 ![Services Page desktop Wireframe](static/images/wireframes/services-desktop.png)
 
-### services mobile layout
+### Services Mobile Layout
+
 ![Services Page mobile Wireframe](static/images/wireframes/services-mobile.png)
 
-### Booking layout
+### Booking Layout
+
 ![Booking Page Wireframe](static/images/wireframes/booking.png)
+
+---
+
+## Database Structure
+
+PrisDean uses a PostgreSQL relational database managed through the
+Django ORM.
+
+### User
+
+Django's built-in User model is used for authentication, with
+Django Allauth handling registration and login.
+
+A user can:
+
+- Have one Profile.
+- Have multiple Bookings.
+
+### Profile
+
+The Profile model has a One-to-One relationship with the User model.
+
+It stores additional customer information used by the application.
+
+A Profile is automatically created whenever a new User is created.
+
+### Booking
+
+The Booking model stores customer appointment information.
+
+Each booking belongs to a registered user and contains information
+including:
+
+- Appointment date.
+- Appointment time.
+- Booking status.
+- Payment information.
+
+### AvailableTimeSlots
+
+The AvailableTimeSlots model stores appointment dates and times made
+available by the administrator.
+
+Only active appointment slots that have not already been booked are
+displayed on the customer booking calendar.
+
+Cancelled bookings are excluded when checking availability, allowing
+cancelled appointment slots to become available again.
+
+---
+
+## User Profile Automation
+
+To improve the user experience, a profile is automatically created
+whenever a new user registers.
+
+### Technologies Used
+
+- Django Signals
+- Django Allauth
+- One-to-One Relationships
+
+### How It Works
+
+When a user successfully registers through Django Allauth, a Django
+signal listens for the creation of a new User object.
+
+The signal automatically creates a corresponding Profile object linked
+to the user through a One-to-One relationship.
+
+This ensures that every registered user has a profile without requiring
+additional setup steps.
+
+### Benefits
+
+- Profiles are created automatically.
+- Prevents missing profile records.
+- Simplifies user onboarding.
+- Demonstrates Django signal implementation.
+
+### Example Signal
+
+```python
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import Profile
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+```
+
+---
 
 ## Project Architecture
 
@@ -301,27 +356,22 @@ Figma was used to create the wireframes for the PrisDean website. The wireframes
 ### Profile Management
 
 - A Profile model extends Django's built-in User model.
-- Profiles are automatically created using Django Signals.
+- Profiles are automatically created using Django signals.
 
-### Database
+### Booking and Payment Flow
 
-- PostgreSQL is used as the primary database.
-- Relationships are managed using Django ORM.
+1. The administrator creates available appointment slots.
+2. The customer selects an available appointment using FullCalendar.
+3. A booking is created with a `pending` status.
+4. The customer is redirected to Stripe Checkout.
+5. Stripe processes the payment.
+6. A Stripe webhook notifies the application when payment is successful.
+7. The booking status changes from `pending` to `confirmed`.
+8. The customer receives booking confirmation by email and SMS.
+9. The business owner receives an SMS notification of the new confirmed booking.
 
-### Containerisation
-
-- Docker is used to ensure a consistent development environment.
-- PostgreSQL and Django run in separate containers managed by Docker Compose.
-```
-
-### Benefits
-
-- Profiles are created automatically
-- Prevents missing profile records
-- Simplifies user onboarding
-- Demonstrates Django signal implementation
-```
 ---
+
 ## Technologies Used
 
 A range of technologies, frameworks and development tools were used
@@ -332,25 +382,20 @@ to build the PrisDean application.
 - **Python** - Used for the backend application logic.
 - **HTML5** - Used to structure the website pages.
 - **CSS3** - Used for custom styling and responsive design.
-- **JavaScript** - Used for interactive functionality including the
-  booking calendar.
+- **JavaScript** - Used for interactive functionality including the booking calendar.
 
 ### Frameworks and Libraries
 
 - **Django** - Main Python web framework used to build the application.
-- **Django Allauth** - Provides user registration, login and logout
-  functionality.
-- **Bootstrap** - Used to create a responsive layout and reusable
-  interface components.
+- **Django Allauth** - Provides user registration, login and logout functionality.
+- **Bootstrap 5** - Used to create a responsive layout and reusable interface components.
 - **Bootstrap Icons** - Used for icons throughout the interface.
-- **FullCalendar** - Used to display available appointment dates and
-  times through an interactive calendar.
+- **FullCalendar** - Used to display available appointment dates and times through an interactive calendar.
 - **Stripe** - Used to securely process customer payments.
 - **Pillow** - Used to support image handling for user profile images.
-- **psycopg2-binary** - Provides the connection between Django and
-  PostgreSQL.
+- **psycopg2-binary** - Provides the connection between Django and PostgreSQL.
 
-### Brevo
+### Brevo API
 
 Brevo is used for transactional communication within the application.
 
@@ -360,18 +405,17 @@ It provides:
 - Transactional SMS messages for customer booking confirmations.
 - SMS notifications to the business owner when a new booking is confirmed.
 
-Sensitive Brevo credentials are stored as Heroku Config Vars and are not
-committed to the GitHub repository.
+Sensitive Brevo credentials are stored as Heroku Config Vars and are
+not committed to the GitHub repository.
 
-### Email and SMS Booking Notifications
+### Email and SMS Booking Notifications API
 
 When a customer successfully completes payment through Stripe, the booking
 is automatically confirmed using a Stripe webhook.
 
 The customer then receives:
 
-- A booking confirmation email containing the appointment date, time and
-  amount paid.
+- A booking confirmation email containing the appointment date, time and amount paid.
 - An SMS confirmation containing the appointment date and time.
 
 The business owner also receives an SMS notification when a new paid booking
@@ -390,36 +434,26 @@ format before being sent to the SMS service.
 
 ### Development Tools
 
-- **Docker** - Used to provide a consistent development environment
-  for the Django application and PostgreSQL database.
-- **Docker Compose** - Used to manage the application and database
-  containers.
+- **Docker** - Used to provide a consistent development environment for the Django application and PostgreSQL database.
+- **Docker Compose** - Used to manage the application and database containers.
 - **Git** - Used for version control throughout development.
 - **GitHub** - Used to store and manage the project's source code.
 - **VS Code** - Used as the main code editor.
 
 ### Code Quality and Testing
 
-- **Black** - Used to automatically format Python code and maintain
-  consistent code style.
-- **Flake8** - Used to check Python code against coding standards and
-  identify potential issues.
-- **Django TestCase** - Used to create automated tests for models,
-  forms and views.
+- **Black** - Used to automatically format Python code and maintain consistent code style.
+- **Flake8** - Used to check Python code against coding standards and identify potential issues.
+- **Django TestCase** - Used to create automated tests for models, forms and views.
 
 ### External Services
 
 - **Stripe Checkout** - Provides the secure hosted payment page.
-- **Stripe Webhooks** - Used to notify the application when a payment
-  has successfully completed.
-- **Stripe CLI** - Used during local development to test webhook
-  events.
+- **Stripe Webhooks** - Used to notify the application when a payment has successfully completed.
+- **Stripe CLI** - Used during local development to test webhook events.
+- **Brevo SMTP** - Used to send transactional customer emails.
+- **Brevo API** - Used to send transactional SMS notifications.
 
----
-
-## Wireframes
-
-## Add wireframes here
 ---
 
 ## Running the Project Locally
@@ -431,9 +465,14 @@ git clone https://github.com/yourusername/prisdean.git
 cd prisdean
 ```
 
+> Replace the repository URL above with the actual PrisDean GitHub repository URL.
+
 ### Create Environment Variables
 
-Create a `.env` file in the project root and add the required environment variables.
+Create a `.env` file in the project root and add the required
+environment variables.
+
+Sensitive credentials should not be committed to GitHub.
 
 ### Build the Docker Containers
 
@@ -465,13 +504,13 @@ docker compose exec web python manage.py createsuperuser
 
 Open your browser and navigate to:
 
-```
+```text
 http://127.0.0.1:8000
 ```
 
 ### Access Django Admin
 
-```
+```text
 http://127.0.0.1:8000/admin
 ```
 
@@ -479,7 +518,8 @@ http://127.0.0.1:8000/admin
 
 ## Why Docker?
 
-Although Docker was not a requirement for this project, it was chosen to provide a consistent and reproducible development environment.
+Although Docker was not a requirement for this project, it was chosen
+to provide a consistent and reproducible development environment.
 
 ### Benefits
 
@@ -493,8 +533,8 @@ Although Docker was not a requirement for this project, it was chosen to provide
 
 The project uses Docker Compose to manage:
 
-- Django application container
-- PostgreSQL database container
+- Django application container.
+- PostgreSQL database container.
 
 This allows the application to be started with a single command:
 
@@ -506,11 +546,11 @@ docker compose up
 
 Implementing Docker helped develop an understanding of:
 
-- Containerisation
-- Multi-container applications
-- Environment management
-- Database services
-- Deployment preparation
+- Containerisation.
+- Multi-container applications.
+- Environment management.
+- Database services.
+- Deployment preparation.
 
 ---
 
@@ -536,7 +576,9 @@ form validation and access to booking views.
 
 Tests can be run inside the Docker container using:
 
-    docker compose exec web python manage.py test
+```bash
+docker compose exec web python manage.py test
+```
 
 ### Model Testing
 
@@ -557,8 +599,7 @@ The form tests check that:
 
 - A valid available appointment slot passes validation.
 - A date and time that is not an available slot is rejected.
-- An appointment slot that has already been booked cannot be booked
-  again.
+- An appointment slot that has already been booked cannot be booked again.
 
 This helps prevent customers from creating bookings for unavailable
 appointments or double-booking an existing appointment.
@@ -583,8 +624,6 @@ customers can only manage bookings that belong to their own account.
 
 Manual testing was carried out throughout development in addition to
 the automated tests.
-
-The following functionality was manually tested:
 
 | Feature | Test | Result |
 | --- | --- | --- |
@@ -621,8 +660,7 @@ The payment workflow was tested to ensure that:
 3. A successful payment generates a Stripe webhook event.
 4. The webhook changes the booking status to `confirmed`.
 5. A booking confirmation email is generated.
-6. Cancelling the Stripe Checkout process changes the pending booking
-   to `cancelled`.
+6. Cancelling the Stripe Checkout process changes the pending booking to `cancelled`.
 
 No real card payments were used during development.
 
@@ -633,11 +671,15 @@ code quality.
 
 Black was run using:
 
-    docker compose exec web black .
+```bash
+docker compose exec web black .
+```
 
 Flake8 was run using:
 
-    docker compose exec web flake8 .
+```bash
+docker compose exec web flake8 .
+```
 
 Black was used to provide consistent Python formatting, while Flake8
 was used to identify issues such as unused imports and code that did
@@ -648,7 +690,9 @@ not meet Python style guidelines.
 Before completion of the project, the automated test suite was run
 using:
 
-    docker compose exec web python manage.py test
+```bash
+docker compose exec web python manage.py test
+```
 
 All implemented automated tests passed successfully.
 
@@ -661,72 +705,84 @@ Some of the main bugs and their solutions are documented below.
 
 ### Available Time Slot Model Import
 
-**Problem:**  
+**Problem:**
+
 The application failed to start because the booking form attempted to
 import `AvailableTimeSlot`, while the model was named
 `AvailableTimeSlots`.
 
 The error returned was:
 
-    ImportError: cannot import name 'AvailableTimeSlot'
+```text
+ImportError: cannot import name 'AvailableTimeSlot'
+```
 
-**Solution:**  
+**Solution:**
+
 The import was updated to use the correct `AvailableTimeSlots` model
 name throughout the booking application.
 
 ### Stripe API Key Not Available
 
-**Problem:**  
+**Problem:**
+
 When Stripe Checkout was first implemented, Stripe returned an
 authentication error because the API key was not available to the
 application.
 
-**Solution:**  
+**Solution:**
+
 Stripe test keys were added as environment variables and loaded through
-the Django settings. The Stripe secret key is then supplied when
-creating Checkout sessions.
+the Django settings.
 
 Sensitive Stripe keys are not stored directly in the source code.
 
 ### Am I Responsive - Website Would Not Display
 
-**Bug:**  
+**Problem:**
+
 When testing the deployed PrisDean website using Am I Responsive, the
 Heroku site would not display inside the device previews.
 
-**Cause:**  
+**Cause:**
+
 Am I Responsive loads websites inside an iframe. Django's built-in
-clickjacking protection prevented the PrisDean homepage from being displayed
-inside an external iframe.
+clickjacking protection prevented the PrisDean homepage from being
+displayed inside an external iframe.
 
-**Fix:**  
-I temporarily imported Django's `xframe_options_exempt` decorator and applied
-it to the homepage view:
+**Solution:**
 
-    from django.views.decorators.clickjacking import xframe_options_exempt
+I temporarily imported Django's `xframe_options_exempt` decorator and
+applied it to the homepage view:
+
+```python
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
-    @xframe_options_exempt
-    def home(request):
-        return render(request, "home/index.html")
+@xframe_options_exempt
+def home(request):
+    return render(request, "home/index.html")
+```
 
-This allowed the homepage to load correctly inside Am I Responsive so that
-the responsive design could be tested and documented.
+This allowed the homepage to load correctly inside Am I Responsive so
+that the responsive design could be tested and documented.
 
-Once the responsive screenshot had been created, the exemption was removed
-so that Django's normal clickjacking protection remained enabled on the
-deployed application.
+Once the responsive screenshot had been created, the exemption was
+removed so that Django's normal clickjacking protection remained
+enabled on the deployed application.
 
 ### Stripe Webhook Secret
 
-**Problem:**  
+**Problem:**
+
 The Stripe webhook initially returned a server error because the
 webhook signing secret was not available.
 
 The application attempted to verify the Stripe signature using a
 `None` value.
 
-**Solution:**  
+**Solution:**
+
 The Stripe webhook signing secret was added to the environment
 configuration and loaded through Django settings.
 
@@ -735,14 +791,16 @@ originated from Stripe.
 
 ### Stripe Metadata
 
-**Problem:**  
+**Problem:**
+
 The webhook initially had difficulty retrieving the booking ID from
 the Stripe Checkout Session metadata.
 
 This prevented the application from identifying which booking should
 be confirmed following payment.
 
-**Solution:**  
+**Solution:**
+
 The booking ID is now added to the Checkout Session metadata when the
 Stripe session is created.
 
@@ -751,11 +809,13 @@ correct booking.
 
 ### Double Booking
 
-**Problem:**  
+**Problem:**
+
 Customers needed to be prevented from selecting an appointment that
 had already been booked by another customer.
 
-**Solution:**  
+**Solution:**
+
 Booking form validation checks for an existing booking with the same
 date and time.
 
@@ -767,12 +827,14 @@ appointment slots can become available again.
 
 ### Unpaid Bookings Blocking Appointment Slots
 
-**Problem:**  
+**Problem:**
+
 A booking was created before the customer completed Stripe Checkout.
 If the customer cancelled the payment process, the pending booking
 could continue to occupy the appointment slot.
 
-**Solution:**  
+**Solution:**
+
 The Stripe cancellation URL includes the booking ID. When the customer
 returns to the payment-cancelled page, the pending booking is changed
 to `cancelled`.
@@ -781,11 +843,13 @@ This releases the appointment slot so another customer can book it.
 
 ### Flake8 Unused Imports
 
-**Problem:**  
+**Problem:**
+
 Flake8 identified several unused imports in automatically generated
 Django files and application files.
 
-**Solution:**  
+**Solution:**
+
 Unused imports were removed where they were not required. The project
 was checked again using Flake8 to ensure the Python code met the
 required coding standards.
@@ -798,9 +862,16 @@ PrisDean is deployed using Heroku with a Heroku PostgreSQL database.
 
 ### Live Site
 
-The deployed application can be accessed at:
+The deployed application is available at:
 
-https://prisdean-684be6a15d1e.herokuapp.com/
+[www.PrisDean.com](https://www.prisdean.com)
+
+The application is hosted on Heroku and uses a Heroku PostgreSQL
+database.
+
+The underlying Heroku deployment is also available at:
+
+[PrisDean Heroku Deployment](https://prisdean-684be6a15d1e.herokuapp.com/)
 
 ### Heroku Deployment
 
@@ -812,11 +883,15 @@ The following steps were used to deploy the project:
 4. Install Gunicorn, WhiteNoise and dj-database-url.
 5. Create a `Procfile` containing:
 
-       web: gunicorn config.wsgi
+```text
+web: gunicorn config.wsgi
+```
 
 6. Create a `.python-version` file containing:
 
-       3.12
+```text
+3.12
+```
 
 7. Configure Django to use the Heroku `DATABASE_URL`.
 8. Configure WhiteNoise for static files.
@@ -824,15 +899,21 @@ The following steps were used to deploy the project:
 10. Connect the local Git repository to Heroku.
 11. Deploy the application using:
 
-       git push heroku main
+```bash
+git push heroku main
+```
 
 12. Apply the database migrations:
 
-       heroku run python manage.py migrate -a prisdean
+```bash
+heroku run python manage.py migrate -a prisdean
+```
 
 13. Create the administrator account:
 
-       heroku run python manage.py createsuperuser -a prisdean
+```bash
+heroku run python manage.py createsuperuser -a prisdean
+```
 
 ### Environment Variables
 
@@ -843,9 +924,13 @@ The deployed application requires environment variables including:
 
 - `EMAIL_HOST_USER` - Brevo SMTP username.
 - `EMAIL_HOST_PASSWORD` - Brevo SMTP key.
-- `DEFAULT_FROM_EMAIL` - verified sender used for customer emails.
+- `DEFAULT_FROM_EMAIL` - Verified sender used for customer emails.
 - `BREVO_API_KEY` - API key used for transactional SMS messages.
-- `OWNER_PHONE` - business owner's telephone number for booking notifications.
+- `OWNER_PHONE` - Business owner's telephone number for booking notifications.
+
+Stripe credentials and the Stripe webhook signing secret are also
+stored securely as environment variables rather than being committed
+to the repository.
 
 ### Stripe Webhook
 
@@ -853,7 +938,9 @@ A Stripe webhook is used to securely confirm successful payments.
 
 The application listens for the:
 
-    checkout.session.completed
+```text
+checkout.session.completed
+```
 
 event.
 
@@ -863,11 +950,10 @@ When a successful payment is received, the application:
 2. Changes the booking status from `pending` to `confirmed`.
 3. Sends the customer a confirmation email using Brevo.
 4. Sends the customer a booking confirmation SMS using Brevo.
-5. Sends the business owner an SMS notification containing the new booking
-   details.
+5. Sends the business owner an SMS notification containing the new booking details.
 
-This ensures that bookings are only confirmed after Stripe has successfully
-processed the payment.
+This ensures that bookings are only confirmed after Stripe has
+successfully processed the payment.
 
 ### Production Configuration
 
@@ -878,16 +964,27 @@ is served using Gunicorn.
 
 ---
 
+## Future Features
+
+Potential future improvements to PrisDean include:
+
+- Customer reviews.
+- Recurring bookings.
+- Multiple cleaning services.
+- Payment receipts.
+- Rescheduling confirmation notifications.
+- Follow-up emails after cleaning.
+- Additional payment options.
+
+---
+
 ## Credits and Acknowledgements
 
 I would like to thank the instructors and teaching staff at Code
-
 Institute for their guidance and support throughout the course and
-
 during the development of this project.
 
 I would also like to thank the staff at Bristol College for their
-
 continued support, encouragement and patience throughout my studies.
 
 Their help has been greatly appreciated.
@@ -895,34 +992,28 @@ Their help has been greatly appreciated.
 ### Learning Resources
 
 During the development of PrisDean, I used a number of learning
-
 resources alongside the course material.
 
-In perticular I studied Django using books written by William S. Vincent.
+In particular, I studied Django using books written by William S.
+Vincent. I began with his beginner-level Django material to strengthen
+my understanding of Django fundamentals before progressing to more
+advanced material as my knowledge developed.
 
-I began with his beginner-level Django material to strengthen my
-
-understanding of Django fundamentals before progressing to his more
-
-advanced material.
-
-was aimed at beginners and helped me strengthen my understanding of
-
-the fundamentals of Django development. I then progressed to a second,
-
-more advanced Django book, which helped me develop my understanding
-
-further.
-
-I also used the official documentation for technologies used within
-
-the project, including Django, Bootstrap, Stripe and FullCalendar.
+I also used the official documentation for the technologies and
+frameworks used within the project, including Django, Bootstrap,
+Stripe and FullCalendar.
 
 ### AI Assistance
 
-ChatGPT was used as a learning and development aid during this project.
+ChatGPT was used as a learning and development aid during the
+development of PrisDean.
 
-It was used to help explain Django concepts, troubleshoot errors, and review code.
+It was used to help explain Django and Python concepts, assist with
+troubleshooting errors, review code and explore possible solutions to
+development problems.
+
+AI-generated suggestions were reviewed, adapted and tested before being
+incorporated into the project.
 
 ---
 
