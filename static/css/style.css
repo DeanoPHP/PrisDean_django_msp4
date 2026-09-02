@@ -198,12 +198,14 @@ body {
 
 /* Media query for mobile phones */
 @media (max-width: 768px) {
-    .hero {
-        min-height: 94vh;
+    .hero-content {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 10px;
     }
 
-    .hero-content {
-        margin-left: 50px;
+    .hero-content h1 {
+        margin-left: 0;
     }
 }
 
